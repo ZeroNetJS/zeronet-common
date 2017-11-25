@@ -1,31 +1,31 @@
-"use strict"
+'use strict'
 
-const EventEmitter = require("events").EventEmitter
-const ip2multi = require("zeronet-common/lib/network/ip2multi")
+const EventEmitter = require('events').EventEmitter
+const ip2multi = require('../network/ip2multi')
 const multi2ip = ip2multi.reverse4
-const PeerInfo = require("peer-info")
-const Id = require("peer-id")
-const multiaddr = require("multiaddr")
-const once = require("once")
-const debug = require("debug")
-const log = process.env.INTENSE_DEBUG ? debug("zeronet:peer") : () => {}
-const pull = require("pull-stream")
+const PeerInfo = require('peer-info')
+const Id = require('peer-id')
+const multiaddr = require('multiaddr')
+const once = require('once')
+const debug = require('debug')
+const log = process.env.INTENSE_DEBUG ? debug('zeronet:peer') : () => {}
+const pull = require('pull-stream')
 
-const crypto = require("crypto")
+const crypto = require('crypto')
 const sha5 = text => crypto.createHash('sha512').update(text).digest('hex')
 
 class Hashfield {
-  constructor() {
-    //TODO: implement
+  constructor () { // eslint-disable-line
+    // TODO: implement
   }
 }
 
 class ZiteInfo {
-  constructor(addr) {
+  constructor (addr) {
     this.addr = addr
     this.hashfield = new Hashfield()
   }
-  toJSON() {
+  toJSON () {
     return {
       addr: this.addr
     }
@@ -33,13 +33,13 @@ class ZiteInfo {
 }
 
 class Peer extends EventEmitter {
-  constructor(addrs, id) {
+  constructor (addrs, id) {
     super()
     const oe = this.emit.bind(this)
     this.emit = function () {
       const a = [...arguments]
       oe.apply(null, a)
-      a.unshift("emit")
+      a.unshift('emit')
       oe.apply(null, a)
     }
     if (Id.isPeerId(id)) {
@@ -57,28 +57,28 @@ class Peer extends EventEmitter {
     }
     this.addrs = this.pi.multiaddrs.toArray().map(a => a.toString())
     this.multiaddr = this.addrs[0]
-    log("created peer %s with address(es) %s", this.id, this.addrs.join(", "))
+    log('created peer %s with address(es) %s', this.id, this.addrs.join(', '))
     this.zites = {}
     this.score = 0
-    this.lfailedd = 0 //last failed dial time
+    this.lfailedd = 0 // last failed dial time
   }
-  seed(zite) {
+  seed (zite) {
     if (!this.zites[zite]) {
-      log("peer %s (%s) now seeds %s", this.id, this.addrs.join(", "), zite)
+      log('peer %s (%s) now seeds %s', this.id, this.addrs.join(', '), zite)
       this.zites[zite] = new ZiteInfo(zite)
-      this.emit("seed", zite)
-      this.emit("seed." + zite)
+      this.emit('seed', zite)
+      this.emit('seed.' + zite)
     }
   }
-  isSeeding(zite) {
-    return !!this.zites[zite]
+  isSeeding (zite) {
+    return Boolean(this.zites[zite])
   }
-  dial(cb) {
-    if (this.score <= -100) return cb(new Error("Score too low"))
+  dial (cb) {
+    if (this.score <= -100) return cb(new Error('Score too low'))
     if (this.isOnline) return cb()
     const offline = once(() => {
       this.isOnline = false
-      this.emit("offline")
+      this.emit('offline')
     })
     const ncb = once((err, conn) => {
       if (err) {
@@ -87,11 +87,11 @@ class Peer extends EventEmitter {
       } else {
         this.score += 5
         this.isOnline = true
-        this.emit("online")
-        if (this.type == "zero") {
-          if (conn) conn.once("end", offline)
-          else offline() //Peer was upgraded. This one is now offline
-        } else if (this.type == "lp2p") {
+        this.emit('online')
+        if (this.type === 'zero') {
+          if (conn) conn.once('end', offline)
+          else offline() // Peer was upgraded. This one is now offline
+        } else if (this.type === 'lp2p') {
           pull(
             conn,
             pull.onEnd(offline)
@@ -100,14 +100,14 @@ class Peer extends EventEmitter {
       }
       cb(err)
     })
-    if (this.type == "zero") {
+    if (this.type === 'zero') {
       this.swarm.dial(this.dialable, ncb)
-    } else if (this.type == "lp2p") {
-      this.swarm.dial(this.dialable, "/isOnline/1.0.0", ncb)
+    } else if (this.type === 'lp2p') {
+      this.swarm.dial(this.dialable, '/isOnline/1.0.0', ncb)
     }
-    setTimeout(ncb, 10 * 1000, new Error("Timeout"))
+    setTimeout(ncb, 10 * 1000, new Error('Timeout'))
   }
-  cmd(cmd, data, cb) {
+  cmd (cmd, data, cb) {
     this.dial(err => {
       if (err) return cb(err)
       const ncb = once((err, res) => {
@@ -120,10 +120,10 @@ class Peer extends EventEmitter {
         cb(err, res)
       })
       this.swarm.dial(this.dialable, cmd, data, ncb)
-      setTimeout(ncb, 10 * 1000, new Error("Timeout"))
+      setTimeout(ncb, 10 * 1000, new Error('Timeout'))
     })
   }
-  toJSON() {
+  toJSON () {
     return {
       addrs: this.addrs,
       id: this.id,
@@ -135,31 +135,31 @@ class Peer extends EventEmitter {
 }
 
 class ZeroPeer extends Peer {
-  constructor(addr) {
+  constructor (addr) {
     super([addr], sha5(sha5(addr)).substr(0, 20))
-    this.type = "zero"
+    this.type = 'zero'
     this.ip = multi2ip(addr)
     this.dialable = multiaddr(addr)
   }
-  discoverZite(zite, cb) {
-    if (this.isSeeding(zite)) return cb(true)
-    cb(false)
+  discoverZite (zite, cb) {
+    if (this.isSeeding(zite)) return cb(true) // eslint-disable-line standard/no-callback-literal
+    cb(false) // eslint-disable-line standard/no-callback-literal
   }
 }
 
 class Lp2pPeer extends Peer {
-  constructor(peer) {
+  constructor (peer) {
     super(peer, peer.id)
-    this.type = "lp2p"
+    this.type = 'lp2p'
     this.dialable = peer
   }
-  discoverZite(zite, cb) {
-    if (this.isSeeding(zite)) return cb(true)
-    this.cmd("hasZite", {
+  discoverZite (zite, cb) {
+    if (this.isSeeding(zite)) return cb(true) // eslint-disable-line standard/no-callback-literal
+    this.cmd('hasZite', {
       zite
     }, (err, res) => {
       log(err, res)
-      if (err) return cb(false)
+      if (err) return cb(false) // eslint-disable-line standard/no-callback-literal
       else {
         if (res.has) this.seed(zite)
         return cb(res.has)
@@ -168,7 +168,7 @@ class Lp2pPeer extends Peer {
   }
 }
 
-function fromJSON(data) {
+function fromJSON (data) {
   if (!data.id) return
   let peer
   if (data.ip) {
@@ -181,10 +181,10 @@ function fromJSON(data) {
   }
   data.zites.forEach(zite_ => {
     let zite = new ZiteInfo(zite_.addr)
-    //TODO: hashfield
+    // TODO: hashfield
     peer.zites[zite.addr] = zite
   })
-  log("peer %s seeds %s", peer.id, data.zites.map(z => z.addr).join(", "))
+  log('peer %s seeds %s', peer.id, data.zites.map(z => z.addr).join(', '))
   return peer
 }
 

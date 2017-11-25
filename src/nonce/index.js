@@ -1,13 +1,13 @@
-"use strict"
+'use strict'
 
-const verify = require("zeronet-common/lib/verify")
+const verify = require('../verify')
 
-module.exports = function Nonces() {
+module.exports = function Nonces () {
   let nonces = {}
 
-  const keep = 10 * 1000 //keep every nonce 10secs
+  const keep = 10 * 1000 // keep every nonce 10secs
 
-  function addNonce(path) {
+  function addNonce (path) {
     clean()
     const n = verify.genNonce()
     nonces[n] = {
@@ -17,20 +17,20 @@ module.exports = function Nonces() {
     return n
   }
 
-  function clean() {
+  function clean () {
     const now = new Date().getTime()
     Object.keys(nonces).map(non => {
       if (nonces[non].time < now) delete nonces[non]
     })
   }
 
-  function validate(nonce, path) {
+  function validate (nonce, path) {
     clean()
     if (!nonces[nonce]) return false
-    return nonces[nonce].path == path
+    return nonces[nonce].path === path
   }
 
-  function redemNonce(nonce, path) {
+  function redemNonce (nonce, path) {
     const v = validate(nonce, path)
     if (v) delete nonces[nonce]
     return v

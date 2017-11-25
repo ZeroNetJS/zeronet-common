@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = function ip2long (argIP) {
   // ip2long('192.0.34.166') returns 3221234342
   // ip2long('0.0xABCDEF') returns 11259375
@@ -15,9 +17,9 @@ module.exports = function ip2long (argIP) {
   if (!argIP) {
     return false // invalid format
   }
-  argIP[0] = 0 // reuse argIP 
+  argIP[0] = 0 // reuse argIP
   for (i = 1; i < 5; i += 1) {
-    argIP[0] += !!((argIP[i] || '').length)
+    argIP[0] += Boolean((argIP[i] || '').length)
     argIP[i] = parseInt(argIP[i]) || 0
   }
   argIP.push(256, 256, 256, 256)
@@ -31,5 +33,5 @@ module.exports = function ip2long (argIP) {
   return argIP[1] * (argIP[0] === 1 || 16777216) +
     argIP[2] * (argIP[0] <= 2 || 65536) +
     argIP[3] * (argIP[0] <= 3 || 256) +
-    argIP[4] * 1
+    Number(argIP[4]) * 1
 }

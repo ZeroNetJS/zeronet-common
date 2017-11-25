@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = function long2ip (ip) {
   if (!isFinite(ip)) {
     return false

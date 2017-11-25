@@ -1,5 +1,7 @@
+'use strict'
+
 // ip4 example: 192.168.2.1
-module.exports.aton = function inet_aton(ip) {
+module.exports.aton = function inet_aton (ip) { // eslint-disable-line camelcase
   // split into octets
   var a = ip.split('.')
   var buffer = new ArrayBuffer(4)
@@ -11,7 +13,7 @@ module.exports.aton = function inet_aton(ip) {
 }
 
 // num example: 3232236033
-module.exports.ntoa = function inet_ntoa(num) {
+module.exports.ntoa = function inet_ntoa (num) { // eslint-disable-line camelcase
   var nbuffer = new ArrayBuffer(4)
   var ndv = new DataView(nbuffer)
   ndv.setUint32(0, num)
@@ -23,7 +25,7 @@ module.exports.ntoa = function inet_ntoa(num) {
   return a.join('.')
 }
 
-module.exports.ntop = function inet_ntop(a) { // eslint-disable-line camelcase
+module.exports.ntop = function inet_ntop (a) { // eslint-disable-line camelcase
   // inet_ntop('\x7F\x00\x00\x01') returns '127.0.0.1'
   // inet_ntop('\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\1') returns '::1'
 
@@ -31,7 +33,7 @@ module.exports.ntop = function inet_ntop(a) { // eslint-disable-line camelcase
   var m = ''
   var c = []
 
-  a += ''
+  a = String(a)
   if (a.length === 4) {
     // IPv4
     return [
@@ -56,7 +58,7 @@ module.exports.ntop = function inet_ntop(a) { // eslint-disable-line camelcase
   }
 }
 
-module.exports.pton = function inet_pton(a) {
+module.exports.pton = function inet_pton (a) { // eslint-disable-line camelcase
   // inet_pton('::') returns '\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0'
   // inet_pton('127.0.0.1') returns '\x7F\x00\x00\x01'
 

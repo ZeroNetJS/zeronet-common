@@ -1,9 +1,9 @@
-"use strict"
+'use strict'
 
-const pull = require("pull-stream")
-const defer = require("pull-defer")
+const pull = require('pull-stream')
+const defer = require('pull-defer')
 
-module.exports = function StorageWrapper(storage) {
+module.exports = function StorageWrapper (storage) {
   const self = this
   self.storage = storage
 
@@ -17,10 +17,11 @@ module.exports = function StorageWrapper(storage) {
   self.getJSON = (key, def, cb) => {
     storage.json.exists(key, (err, res) => {
       if (err) return cb(err)
-      if (res)
+      if (res) {
         storage.json.read(key, cb)
-      else
+      } else {
         return cb(null, def)
+      }
     })
   }
   self.setJSON = storage.json.write
