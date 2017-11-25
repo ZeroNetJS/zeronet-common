@@ -1,7 +1,7 @@
 'use strict'
 
 const each = require('async/each')
-const Tracker = require('zeronet-common/lib/tracker')
+const Tracker = require('zeronet-common/src/tracker')
 const uuid = require('uuid')
 
 module.exports = function TrackerManager (trackerServers, zeronet) {

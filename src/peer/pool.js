@@ -6,7 +6,7 @@ const Peer = require('./')
 const PeerInfo = require('peer-info')
 const Id = require('peer-id')
 const multiaddr = require('multiaddr')
-const ip2multi = require('zeronet-common/lib/network/ip2multi')
+const ip2multi = require('zeronet-common/src/network/ip2multi')
 const debug = require('debug')
 const log = process.env.INTENSE_DEBUG ? debug('zeronet:pool') : () => {}
 
