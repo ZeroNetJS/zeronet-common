@@ -1,7 +1,7 @@
 'use strict'
 
 const PeerRequest = require('peer-request')
-const validate = require('zeronet-common/lib/verify').verifyProtocol
+const validate = require('../verify').verifyProtocol
 const PeerRequestHandler = require('./peer-request-handler')
 
 function genHandshakeData (protocol, client, zeronet) {
