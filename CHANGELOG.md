@@ -1,3 +1,14 @@
+<a name="0.2.0"></a>
+# 0.2.0 (2017-11-25)
+
+
+### Bug Fixes
+
+* lint ([3669718](https://github.com/ZeroNetJS/zeronet-js/commit/3669718))
+* Most bugs fixed so far ([81e1c44](https://github.com/ZeroNetJS/zeronet-js/commit/81e1c44))
+
+
+
 <a name="0.1.0"></a>
 # [0.1.0](https://github.com/ZeroNetJS/zeronet-js/compare/v0.0.5...v0.1.0) (2017-11-25)
 
