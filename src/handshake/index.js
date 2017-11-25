@@ -54,7 +54,7 @@ function Handshake (data) {
     return r
   }
 
-  addCMD('commonCrypto', () => self.crypt_supported.filter(c => self.linked.crypt_supported.indexOf(c) != -1)[0], true)
+  addCMD('commonCrypto', () => self.crypt_supported.filter(c => self.linked.crypt_supported.indexOf(c) !== -1)[0], true)
   addCMD('getLibp2p', () => self.libp2p && self.linked.libp2p ? self.linked.libp2p : false, true)
 }
 
@@ -68,7 +68,7 @@ module.exports = function ZeroNetHandshake (client, protocol, zeronet, opt) {
   function handshakeComplete (err, opt) {
     // console.log(waiting,opt,new Error("."))
     if (!Array.isArray(waiting)) throw new Error('HandshakeError: Complete called multiple times')
-    waiting.forEach(w => w(err, client.handshakeData, client._opt = opt))
+    waiting.forEach(w => w(err, client.handshakeData, (client._opt = opt)))
     waiting = err
   }
 
