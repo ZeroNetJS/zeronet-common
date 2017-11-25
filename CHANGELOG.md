@@ -1,3 +1,19 @@
+<a name="0.2.1"></a>
+## 0.2.1 (2017-11-25)
+
+
+### Bug Fixes
+
+* lint ([3669718](https://github.com/ZeroNetJS/zeronet-js/commit/3669718))
+* Most bugs fixed so far ([81e1c44](https://github.com/ZeroNetJS/zeronet-js/commit/81e1c44))
+
+
+### Features
+
+* Remove handshake, fix: imports ([50a92c1](https://github.com/ZeroNetJS/zeronet-js/commit/50a92c1))
+
+
+
 <a name="0.2.0"></a>
 # 0.2.0 (2017-11-25)
 
