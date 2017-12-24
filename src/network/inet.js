@@ -1,5 +1,7 @@
 'use strict'
 
+console.warn('Use inet-tools instead!')
+
 // ip4 example: 192.168.2.1
 module.exports.aton = function inet_aton (ip) { // eslint-disable-line camelcase
   // split into octets
